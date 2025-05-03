@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     // Particle system to play when the object jumps
     [SerializeField] ParticleSystem ps;
 
+    [SerializeField] private GameObject gameOverText;
+
     // Keeps track of whether the object is currently jumping
     private bool isJumping = false;
 
@@ -130,6 +132,11 @@ public class PlayerMovement : MonoBehaviour
             Time.timeScale = 0f;
             // Log a message for debugging
             Debug.Log("Game Over: Player collided with a car!");
+
+            if (gameOverText != null)
+            {
+                gameOverText.SetActive(true); // Show Game Over message
+            }
         }
     }
 }
