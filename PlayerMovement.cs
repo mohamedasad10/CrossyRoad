@@ -4,20 +4,22 @@ using UnityEngine.InputSystem; // For handling player input
 
 public class PlayerMovement : MonoBehaviour
 {
-    // InputActions to handle user movement input
-    [SerializeField] InputAction moveForward; 
+    // InputActions to handle user movement inputs (forward, left, right)
+    [SerializeField] InputAction moveForward;
+    [SerializeField] InputAction moveLeft;
+    [SerializeField] InputAction moveRight;
 
-    // Jump settings: height and duration
+    // Settings for jump behavior (height and duration of the jump arc)
     [SerializeField] float jumpHeight = 2f;
     [SerializeField] float jumpDuration = 0.3f;
 
-    // Particle system for jump effect
+    // Particle system to play when the object jumps
     [SerializeField] ParticleSystem ps;
 
-    // Keeps track of the jumping state
+    // Keeps track of whether the object is currently jumping
     private bool isJumping = false;
 
-    // Rigidbody for physics-based calculations
+    // Reference to the Rigidbody component for physics calculations
     private Rigidbody rb;
 
     private void Start()
@@ -25,94 +27,13 @@ public class PlayerMovement : MonoBehaviour
         // Get the Rigidbody component attached to this GameObject
         rb = GetComponent<Rigidbody>();
 
-        // Set Rigidbody to kinematic to allow manual control
+        // Set the Rigidbody to be kinematic to manually control movement instead of using physics forces
         rb.isKinematic = true;
     }
 
     private void OnEnable()
     {
-        // Enable input actions to detect user input
-        moveForward.Enable();
-    }
-
-    private void OnDisable()
-    {
-        // Disable input actions to prevent memory leaks
-        moveForward.Disable();
-    }
-
-    private void Update()
-    {
-        // If already jumping, don't process any new input
-        if (isJumping) return;
-
-        // Check for forward movement
-        if (moveForward.triggered)
-        {
-            StartCoroutine(SmoothJump(Vector3.forward, Quaternion.LookRotation(Vector3.forward)));
-        }
-        // Check for left movement
-        else if (moveLeft.triggered)
-        {
-            StartCoroutine(SmoothJump(Vector3.left, Quaternion.LookRotation(Vector3.left)));
-        }
-        // Check for right movement
-        else if (moveRight.triggered)
-        {
-            StartCoroutine(SmoothJump(Vector3.right, Quaternion.LookRotation(Vector3.right)));
-        }
-    }
-
-
-    // Coroutine for smooth jump animation
-    private IEnumerator SmoothJump(Vector3 direction, Quaternion targetRotation)
-    {
-        // Prevent multiple jumps at the same time
-        isJumping = true;
-
-        // Record the starting position
-        Vector3 startPos = transform.position;
-        Vector3 endPos = startPos + direction;
-
-        // Track time elapsed during the jump
-        float elapsed = 0f;
-
-        // Start the jump particle effect if it's assigned
-        if (ps != null)
-        {
-            ps.Play();
-        }
-
-        // Smooth jump arc over time
-        while (elapsed < jumpDuration)
-        {
-            float t = elapsed / jumpDuration; // Progress of the jump (0 to 1)
-
-            // Calculate the height of the jump
-            float height = 4 * jumpHeight * t * (1 - t); // Parabolic arc formula
-
-            // Update the position with a smooth curve and apply the height
-            transform.position = Vector3.Lerp(startPos, endPos, t) + Vector3.up * height;
-
-            // Rotate object smoothly towards the target direction
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, t);
-
-            // Increment time and wait for the next frame
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        // Snap to the final position and rotation after the jump
-        transform.position = endPos;
-        transform.rotation = targetRotation;
-
-        // Reset the jumping state
-        isJumping = false;
-    }
-
-    private void OnEnable()
-    {
-        // Enable all necessary input actions
+        // Enable the input actions so the game can detect user input
         moveForward.Enable();
         moveLeft.Enable();
         moveRight.Enable();
@@ -120,10 +41,81 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDisable()
     {
-        // Disable all input actions when not in use
+        // Disable the input actions when the object is disabled to prevent memory leaks
         moveForward.Disable();
         moveLeft.Disable();
         moveRight.Disable();
     }
 
+    private void Update()
+    {
+        // If the object is already jumping, prevent new input (no double jumping)
+        if (isJumping) return;
+
+        // Check if the player pressed the moveForward input
+        if (moveForward.triggered)
+        {
+            // Start a coroutine to make the object jump forward
+            StartCoroutine(SmoothJump(Vector3.forward, Quaternion.LookRotation(Vector3.forward)));
+        }
+        // Check if the player pressed the moveLeft input
+        else if (moveLeft.triggered)
+        {
+            // Start a coroutine to make the object jump left
+            StartCoroutine(SmoothJump(Vector3.left, Quaternion.LookRotation(Vector3.left)));
+        }
+        // Check if the player pressed the moveRight input
+        else if (moveRight.triggered)
+        {
+            // Start a coroutine to make the object jump right
+            StartCoroutine(SmoothJump(Vector3.right, Quaternion.LookRotation(Vector3.right)));
+        }
+    }
+
+    // Coroutine to handle the smooth jump animation
+    private IEnumerator SmoothJump(Vector3 direction, Quaternion targetRotation)
+    {
+        // Set the jumping flag to true to prevent other jumps during this one
+        isJumping = true;
+
+        // Record the starting position and calculate the target position
+        Vector3 startPos = transform.position;
+        Vector3 endPos = startPos + direction;
+
+        // Track the time elapsed during the jump
+        float elapsed = 0f;
+
+        // If the particle system is assigned, start playing it (jump particle effect)
+        if (ps != null)
+        {
+            ps.Play();
+        }
+
+        // Loop over time to create a smooth jump arc
+        while (elapsed < jumpDuration)
+        {
+            // t is a value between 0 and 1 that represents the progress of the jump
+            float t = elapsed / jumpDuration;
+
+            // Calculate the height of the jump arc based on the formula
+            float height = 4 * jumpHeight * t * (1 - t); // Parabolic arc
+
+            // Move the object along the path and apply the height for jumping
+            transform.position = Vector3.Lerp(startPos, endPos, t) + Vector3.up * height;
+
+            // Smoothly rotate the object to face the target direction (forward, left, or right)
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, t);
+
+            // Increment the elapsed time and wait until the next frame
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // After the jump is finished, snap to the exact end position and rotation
+        transform.position = endPos;
+        transform.rotation = targetRotation;
+
+        // Reset the jumping flag
+        isJumping = false;
+    }
 }
