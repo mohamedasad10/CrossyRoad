@@ -18,6 +18,9 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private GameObject gameOverText;
 
+    //Restart Button
+    [SerializeField] private GameObject restartButton;
+
     // Keeps track of whether the object is currently jumping
     private bool isJumping = false;
 
@@ -138,5 +141,11 @@ public class PlayerMovement : MonoBehaviour
                 gameOverText.SetActive(true); // Show Game Over message
             }
         }
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f; // Unpause the game
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reload current scene
     }
 }
