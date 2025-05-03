@@ -118,4 +118,18 @@ public class PlayerMovement : MonoBehaviour
         // Reset the jumping flag
         isJumping = false;
     }
+
+    //COLLISIONS
+    // Called when the player enters a trigger collider
+    private void OnTriggerEnter(Collider other)
+    {
+    // Check if the collided object has the "Car" tag
+        if (other.CompareTag("Car"))
+        {
+            // Pause the game by setting time scale to 0 effectively ending the game
+            Time.timeScale = 0f;
+            // Log a message for debugging
+            Debug.Log("Game Over: Player collided with a car!");
+        }
+    }
 }
