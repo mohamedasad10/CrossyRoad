@@ -109,4 +109,21 @@ public class PlayerMovement : MonoBehaviour
         // Reset the jumping state
         isJumping = false;
     }
+
+    private void OnEnable()
+    {
+        // Enable all necessary input actions
+        moveForward.Enable();
+        moveLeft.Enable();
+        moveRight.Enable();
+    }
+
+    private void OnDisable()
+    {
+        // Disable all input actions when not in use
+        moveForward.Disable();
+        moveLeft.Disable();
+        moveRight.Disable();
+    }
+
 }
