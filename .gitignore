@@ -1,0 +1,58 @@
+# Unity generated files and folders to ignore
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+MemoryCaptures/
+.vscode/
+
+# Unity auto-generated files
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Visual Studio Code
+.vscode/
+
+# Crash reports
+sysinfo.txt
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# Git LFS pointers (optional: uncomment if using LFS)
+# *.psd
+# *.png
+# *.fbx
+# *.mp4
+
+# Optional: Ignore built player executable folders
+*.exe
+*.apk
+*.aab
+*.xcodeproj
+*.xcworkspace
+
+# Optional: Exclude platform-specific builds
+*.app
+*.ipa
+
+# Don't ignore the following folders (track code and config)
+!Assets/Scripts/
+!ProjectSettings/
+!Packages/
