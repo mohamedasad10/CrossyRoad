@@ -43,16 +43,26 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        // If jumping, don't allow new inputs
+        // If already jumping, don't process any new input
         if (isJumping) return;
 
-        // Check if the player pressed the forward move input
+        // Check for forward movement
         if (moveForward.triggered)
         {
-            // Start a coroutine for the jump forward action
             StartCoroutine(SmoothJump(Vector3.forward, Quaternion.LookRotation(Vector3.forward)));
         }
+        // Check for left movement
+        else if (moveLeft.triggered)
+        {
+            StartCoroutine(SmoothJump(Vector3.left, Quaternion.LookRotation(Vector3.left)));
+        }
+        // Check for right movement
+        else if (moveRight.triggered)
+        {
+            StartCoroutine(SmoothJump(Vector3.right, Quaternion.LookRotation(Vector3.right)));
+        }
     }
+
 
     // Coroutine for smooth jump animation
     private IEnumerator SmoothJump(Vector3 direction, Quaternion targetRotation)
