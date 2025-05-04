@@ -77,6 +77,8 @@ Assets/
 ├── Models/             # Car models from Asset Store
 └── Materials/Textures/ # Materials and environment assets
 
+---
+
 🔮 Future Improvements
 Add a score system and high score leaderboard.
 Integrate character customization options.
