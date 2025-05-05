@@ -1,6 +1,8 @@
 using System.Collections; // For using coroutines (time-based actions)
 using UnityEngine; // Unity-specific features
 using UnityEngine.InputSystem; // For handling player input
+using UnityEngine.SceneManagement; // Scene loading
+
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -9,17 +11,19 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] InputAction moveLeft;
     [SerializeField] InputAction moveRight;
 
+
     // Settings for jump behavior (height and duration of the jump arc)
     [SerializeField] float jumpHeight = 2f;
     [SerializeField] float jumpDuration = 0.3f;
 
-    // Particle system to play when the object jumps
+    // Particle system for game completion
     [SerializeField] ParticleSystem ps;
 
     [SerializeField] private GameObject gameOverText;
 
     //Restart Button
     [SerializeField] private GameObject restartButton;
+
 
     // Keeps track of whether the object is currently jumping
     private bool isJumping = false;
@@ -32,8 +36,8 @@ public class PlayerMovement : MonoBehaviour
         // Get the Rigidbody component attached to this GameObject
         rb = GetComponent<Rigidbody>();
 
-        // Set the Rigidbody to be kinematic to manually control movement instead of using physics forces
-        rb.isKinematic = true;
+        
+        rb.isKinematic = false;
     }
 
     private void OnEnable()
@@ -105,8 +109,8 @@ public class PlayerMovement : MonoBehaviour
             // Calculate the height of the jump arc based on the formula
             float height = 4 * jumpHeight * t * (1 - t); // Parabolic arc
 
-            // Move the object along the path and apply the height for jumping
-            transform.position = Vector3.Lerp(startPos, endPos, t) + Vector3.up * height;
+            Vector3 jumpPos = Vector3.Lerp(startPos, endPos, t) + Vector3.up * height;
+            rb.MovePosition(jumpPos);
 
             // Smoothly rotate the object to face the target direction (forward, left, or right)
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, t);
@@ -116,8 +120,11 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
 
+
+
+
         // After the jump is finished, snap to the exact end position and rotation
-        transform.position = endPos;
+        rb.MovePosition(endPos);
         transform.rotation = targetRotation;
 
         // Reset the jumping flag
@@ -128,7 +135,7 @@ public class PlayerMovement : MonoBehaviour
     // Called when the player enters a trigger collider
     private void OnTriggerEnter(Collider other)
     {
-    // Check if the collided object has the "Car" tag
+        // Check if the collided object has the "Car" tag
         if (other.CompareTag("Car"))
         {
             // Pause the game by setting time scale to 0 effectively ending the game
@@ -139,6 +146,11 @@ public class PlayerMovement : MonoBehaviour
             if (gameOverText != null)
             {
                 gameOverText.SetActive(true); // Show Game Over message
+            }
+
+            if (restartButton != null)
+            {
+                restartButton.SetActive(true);
             }
         }
     }
