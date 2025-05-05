@@ -41,6 +41,13 @@ https://github.com/user-attachments/assets/b0a1a8a4-c174-40a6-9919-d62e359510d1
 | Asset Store | 3D models and sounds               |
 
 ---
+## 🎨 Assets
+
+- Vehicle models used from the [Super Retro Compact Car Pack](https://assetstore.unity.com/packages/3d/vehicles/land/super-retro-compact-car-pack-173638) on the Unity Asset Store.
+- Environment models from the [LowPoly Nature Village Pack](https://assetstore.unity.com/packages/3d/environments/lowpoly-nature-village-pack-165318) on the Unity Asset Store.
+- Sound effects from [freesound.org](https://freesound.org/)
+
+---
 
 ## 🚀 Getting Started
 
