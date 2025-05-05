@@ -2,30 +2,31 @@ using UnityEngine;
 
 public class CarMovement : MonoBehaviour
 {
-    // Car Speed
-    [SerializeField] private float speed = 5f;
-
-    // Max distance car can travel before being destroyed
+    // Maximum distance the car can travel before being destroyed
     [SerializeField] private float maxTravelDistance = 50f;
 
-    // The position where the car was initially spawned
+    // The starting position of the car
     private Vector3 startPos;
 
+    // Store the initial position when the car is spawned
     private void Start()
     {
-        // Store the spawn position for distance tracking
         startPos = transform.position;
     }
 
+    // Move the car forward and destroy it if it exceeds the allowed distance
     private void Update()
     {
-        // Continuously move the car in its forward direction
+        // Get the current speed from the GameManager
+        float speed = GameManager.Instance.GetCurrentCarSpeed();
+
+        // Move the car forward based on speed and time
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
 
-        // Check if the car has moved beyond the allowed distance
+        // Check if the car has traveled beyond the max distance
         if (Vector3.Distance(startPos, transform.position) >= maxTravelDistance)
         {
-            // Destroy the car to prevent memory overload
+            // Destroy the car object to free resources
             Destroy(gameObject);
         }
     }
