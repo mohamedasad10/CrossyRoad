@@ -1,6 +1,7 @@
 # Crossy Road in Unity
 
-![Game Screenshot](Images/FinalProduct.png)
+## Game Demo
+https://github.com/user-attachments/assets/b0a1a8a4-c174-40a6-9919-d62e359510d1
 
 **3D Crossy Road-style endless runner** built in Unity. Players dodge cars and navigate dynamically generated road segments while progressing through multiple levels. This project highlights clean Unity development practices, procedural terrain generation, modular prefab systems, and interactive UI with drag-and-drop audio support.
 
